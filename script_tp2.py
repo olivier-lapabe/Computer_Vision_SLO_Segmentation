@@ -16,7 +16,8 @@ def evaluate(img_out, img_GT):
 
     PRECIS = TP / (TP + FP) # Precision
     RECALL = TP / (TP + FN) # Rappel
-    return PRECIS, RECALL, img_out_skel, GT_skel
+    F1SCORE = 2 / (1/PRECIS + 1/RECALL)
+    return PRECIS, RECALL, F1SCORE, img_out_skel, GT_skel
 
 
 # -----------------------------------------------------------------------------
@@ -44,11 +45,10 @@ def plot_segmentation(img, img_out, img_out_skel, img_GT, GT_skel):
 # -----------------------------------------------------------------------------
 # evaluate_picture
 # -----------------------------------------------------------------------------
-def evaluate_picture(img_index, seg_function, *args, plotting = True):
+def evaluate_picture(img_index, seg_function, *args, plotting = True, printing = True):
     #Ouvrir l'image originale en niveau de gris
     img =  np.asarray(Image.open(f'./images_IOSTAR/star{img_index}_OSC.jpg')).astype(np.uint8)
-    print("The picture has the shape: ", img.shape)
-
+    #print("The picture has the shape: ", img.shape)
     nrows, ncols = img.shape
     row, col = np.ogrid[:nrows, :ncols]
     #On ne considere que les pixels dans le disque inscrit 
@@ -61,10 +61,12 @@ def evaluate_picture(img_index, seg_function, *args, plotting = True):
     #Ouvrir l'image Verite Terrain en booleen
     img_GT =  np.asarray(Image.open(f'./images_IOSTAR/GT_{img_index}.png')).astype(np.bool_)
 
-    PRECIS, RECALL, img_out_skel, GT_skel = evaluate(img_out, img_GT)
-    print(f'Precision = {PRECIS:0.2%}, Recall = {RECALL:0.2%}')
+    PRECIS, RECALL, F1SCORE, img_out_skel, GT_skel = evaluate(img_out, img_GT)
+
+    if printing:
+        print(f'Precision = {PRECIS:0.2%}, Recall = {RECALL:0.2%}, F1 Score = {F1SCORE:0.2%}')
 
     if plotting:
         plot_segmentation(img, img_out, img_out_skel, img_GT, GT_skel)
 
-    return PRECIS, RECALL
+    return PRECIS, RECALL, F1SCORE
