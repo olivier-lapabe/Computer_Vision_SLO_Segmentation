@@ -5,6 +5,19 @@ from matplotlib import pyplot as plt
 
 
 # -----------------------------------------------------------------------------
+# masking
+# -----------------------------------------------------------------------------
+def masking(img):
+    nrows, ncols = img.shape
+    row, col = np.ogrid[:nrows, :ncols]
+    #On ne considere que les pixels dans le disque inscrit 
+    img_mask = (np.ones(img.shape)).astype(np.bool_)
+    invalid_pixels = ((row - nrows/2)**2 + (col - ncols/2)**2 > (nrows / 2)**2)
+    img_mask[invalid_pixels] = 0
+    return img_mask
+
+
+# -----------------------------------------------------------------------------
 # evaluate
 # -----------------------------------------------------------------------------
 def evaluate(img_out, img_GT):
@@ -48,15 +61,7 @@ def plot_segmentation(img, img_out, img_out_skel, img_GT, GT_skel):
 def evaluate_picture(img_index, seg_function, *args, plotting = True, printing = True):
     #Ouvrir l'image originale en niveau de gris
     img =  np.asarray(Image.open(f'./images_IOSTAR/star{img_index}_OSC.jpg')).astype(np.uint8)
-    #print("The picture has the shape: ", img.shape)
-    nrows, ncols = img.shape
-    row, col = np.ogrid[:nrows, :ncols]
-    #On ne considere que les pixels dans le disque inscrit 
-    img_mask = (np.ones(img.shape)).astype(np.bool_)
-    invalid_pixels = ((row - nrows/2)**2 + (col - ncols/2)**2 > (nrows / 2)**2)
-    img_mask[invalid_pixels] = 0
-
-    img_out = seg_function(img,img_mask, *args)
+    img_out = seg_function(img, *args)
 
     #Ouvrir l'image Verite Terrain en booleen
     img_GT =  np.asarray(Image.open(f'./images_IOSTAR/GT_{img_index}.png')).astype(np.bool_)
