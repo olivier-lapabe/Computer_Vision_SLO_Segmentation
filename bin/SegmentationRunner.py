@@ -1,5 +1,5 @@
-from utils import *
-from segmentation_functions import *
+from src.Common.utils import *
+from src.SegmentationFunctions.SegmentationFunctions import *
 import itertools
 from skimage.morphology import disk, square, rectangle, remove_small_objects
 from skimage.filters import gaussian
@@ -64,9 +64,6 @@ def segmentation_pipeline(img, contrast_factor, p_structures, gaussian_sigma, th
 
 
 if __name__ == "__main__":
-    # TODO: create src folder with Common/utils subfolder
-    # TODO: create bin folder at root with this file, rename -> SegmentationRunner or something similar
-    # TODO: create setup.py, also recreate requirement file, lots of erroneous packages
     start_time = time.time()
     best_params, best_precision_mean, best_recall_mean, best_f1score_mean = find_best_parameters(img_star_array,
                                                                                                  img_GT_array,

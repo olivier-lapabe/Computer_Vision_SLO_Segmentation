@@ -48,11 +48,11 @@ def plot_segmentation(img, img_out, img_out_skel, img_GT, GT_skel):
 # -----------------------------------------------------------------------------
 def evaluate_segmentation_picture(img_star, img_GT, seg_function, *args, plotting = False, printing = False):
     #Ouvrir l'image originale en niveau de gris
-    img =  Image.open(f'./images_IOSTAR/{img_star}')
+    img =  Image.open(f'./data/images_IOSTAR/{img_star}')
     img_out = seg_function(img, *args)
 
     #Ouvrir l'image Verite Terrain en booleen
-    img_GT =  np.asarray(Image.open(f'./images_IOSTAR/{img_GT}')).astype(np.bool_)
+    img_GT =  np.asarray(Image.open(f'./data/images_IOSTAR/{img_GT}')).astype(np.bool_)
 
     PRECIS, RECALL, F1SCORE, img_out_skel, GT_skel = evaluate_picture(img_out, img_GT)
 
@@ -83,7 +83,14 @@ def evaluate_param_combination(img_star_array, img_GT_array, seg_function, param
 
     # Iterate over images
     for img_star, img_GT in zip(img_star_array, img_GT_array):
-        precision, recall, f1score = evaluate_segmentation_picture(img_star, img_GT, seg_function, contrast_factor, structure, gaussian_sigma, threshold, remove_min_size)
+        precision, recall, f1score = evaluate_segmentation_picture(img_star, 
+                                                                   img_GT, 
+                                                                   seg_function, 
+                                                                   contrast_factor, 
+                                                                   structure, 
+                                                                   gaussian_sigma, 
+                                                                   threshold, 
+                                                                   remove_min_size)
         precisions.append(precision)
         recalls.append(recall)
         f1scores.append(f1score)
