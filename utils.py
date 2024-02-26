@@ -81,7 +81,7 @@ def evaluate_param_combination(img_star_array, img_GT_array, seg_function, param
     contrast_factor, structure, gaussian_sigma, threshold, remove_min_size = params # Extract parameters
     precisions, recalls, f1scores = [], [], [] # Initialize arrays for metrics across images
 
-    #Iterate over images
+    # Iterate over images
     for img_star, img_GT in zip(img_star_array, img_GT_array):
         precision, recall, f1score = evaluate_segmentation_picture(img_star, img_GT, seg_function, contrast_factor, structure, gaussian_sigma, threshold, remove_min_size)
         precisions.append(precision)
