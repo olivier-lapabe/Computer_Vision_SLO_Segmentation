@@ -1,4 +1,5 @@
 import numpy as np
+import os
 from skimage.morphology import thin
 from PIL import Image
 from matplotlib import pyplot as plt
@@ -24,7 +25,7 @@ def evaluate_picture(img_out, img_GT):
 # -----------------------------------------------------------------------------
 # plot_segmentation
 # -----------------------------------------------------------------------------
-def plot_segmentation(img, img_out, img_out_skel, img_GT, GT_skel):
+def plot_segmentation(img, img_out, img_out_skel, img_GT, GT_skel, save_plot_path=None):
     plt.subplot(231)
     plt.imshow(img,cmap = 'gray')
     plt.title('Image Originale')
@@ -40,13 +41,19 @@ def plot_segmentation(img, img_out, img_out_skel, img_GT, GT_skel):
     plt.subplot(236)
     plt.imshow(GT_skel)
     plt.title('Vérité Terrain Squelette')
-    plt.show()
+
+    if save_plot_path:
+        if not os.path.exists(os.path.dirname(save_plot_path)):
+            os.makedirs(os.path.dirname(save_plot_path))
+        plt.savefig(save_plot_path)
+    else:
+        plt.show()
 
 
 # -----------------------------------------------------------------------------
 # evaluate_segmentation_picture
 # -----------------------------------------------------------------------------
-def evaluate_segmentation_picture(img_star, img_GT, seg_function, *args, plotting = False, printing = False):
+def evaluate_segmentation_picture(img_star, img_GT, seg_function, *args, save_plot_path=None, printing=False):
     #Ouvrir l'image originale en niveau de gris
     img =  Image.open(f'./data/images_IOSTAR/{img_star}')
     img_out = seg_function(img, *args)
@@ -54,15 +61,15 @@ def evaluate_segmentation_picture(img_star, img_GT, seg_function, *args, plottin
     #Ouvrir l'image Verite Terrain en booleen
     img_GT =  np.asarray(Image.open(f'./data/images_IOSTAR/{img_GT}')).astype(np.bool_)
 
-    PRECIS, RECALL, F1SCORE, img_out_skel, GT_skel = evaluate_picture(img_out, img_GT)
+    precision, recall, f1score, img_out_skel, GT_skel = evaluate_picture(img_out, img_GT)
 
     if printing:
-        print(f'Precision = {PRECIS:0.2%}, Recall = {RECALL:0.2%}, F1 Score = {F1SCORE:0.2%}')
+        print(f'{img_star}: \t Precision = {precision:0.2%}, Recall = {recall:0.2%}, F1 Score = {f1score:0.2%}')
 
-    if plotting:
-        plot_segmentation(img, img_out, img_out_skel, img_GT, GT_skel)
+    if save_plot_path:
+        plot_segmentation(img, img_out, img_out_skel, img_GT, GT_skel, save_plot_path)
 
-    return PRECIS, RECALL, F1SCORE
+    return precision, recall, f1score
 
 
 # -----------------------------------------------------------------------------
@@ -78,7 +85,7 @@ def evaluate_param_combination(img_star_array, img_GT_array, seg_function, param
     Returns:
         _type_: _description_
     """
-    contrast_factor, structure, gaussian_sigma, threshold, remove_min_size = params # Extract parameters
+    contrast_factor, p_structure, gaussian_sigma, threshold, remove_min_size = params # Extract parameters
     precisions, recalls, f1scores = [], [], [] # Initialize arrays for metrics across images
 
     # Iterate over images
@@ -87,7 +94,7 @@ def evaluate_param_combination(img_star_array, img_GT_array, seg_function, param
                                                                    img_GT, 
                                                                    seg_function, 
                                                                    contrast_factor, 
-                                                                   structure, 
+                                                                   p_structure, 
                                                                    gaussian_sigma, 
                                                                    threshold, 
                                                                    remove_min_size)
@@ -130,3 +137,16 @@ def find_best_parameters(img_star_array, img_GT_array, seg_function, parameter_c
                 best_recall_mean = recall_mean # ... store related mean recall
                
     return best_params, best_precision_mean, best_recall_mean, best_f1score_mean
+
+
+# -----------------------------------------------------------------------------
+# results_latex_format
+# -----------------------------------------------------------------------------
+def results_latex_format(dict):
+    lines = []
+    for key, (precision, recall, f1score) in dict.items():
+        lines.append(f"Image {key} & {f1score*100:.2f}\% & {precision*100:.2f}\% & {recall*100:.2f}\% \\\\")
+
+    # Join all lines into a single string
+    formatted_text = "\n".join(lines)
+    return formatted_text
