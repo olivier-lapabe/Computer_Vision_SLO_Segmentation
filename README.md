@@ -16,7 +16,7 @@ Refer to `requirements.txt` for a full list of dependencies.
 
 ```
 git clone https://github.com/olivier-lapabe/Computer_Vision_SLO_Segmentation.git
-cd Computer Vision SLO Segmentation
+cd Computer_Vision_SLO_Segmentation
 pip install .
 ```
 
@@ -28,7 +28,7 @@ If you're planning to contribute or test the latest changes, you should first se
 
 ```
 git clone https://github.com/JPGodTier/Computer_Vision_SLO_Segmentation.git
-cd Vision SLO Segmentation
+cd Computer_Vision_SLO_Segmentation
 ```
 
 * Set up a virtual environment:
