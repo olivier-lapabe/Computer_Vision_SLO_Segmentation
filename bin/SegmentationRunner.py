@@ -67,6 +67,7 @@ if __name__ == "__main__":
     start_time = time.time()
     # Store segmentation results in dictionary
     results_dict = {}
+    precision_array, recall_array, f1score_array = [], [], []
     for img_star, img_GT in zip(img_star_array, img_GT_array):
         precision, recall, f1score = evaluate_segmentation_picture(img_star, 
                                     img_GT, 
@@ -78,7 +79,11 @@ if __name__ == "__main__":
                                     remove_min_size,
                                     save_plot_path = f"./data/results/{img_star[4:6]}_segmented", 
                                     printing = True)
+        precision_array.append(precision)
+        recall_array.append(recall)
+        f1score_array.append(f1score)
         results_dict[img_star[4:6]] = precision, recall, f1score
+    results_dict['average'] = np.mean(precision_array), np.mean(recall_array), np.mean(f1score_array)
     
     # Format and store results in latex format
     formatted_text = results_latex_format(results_dict)

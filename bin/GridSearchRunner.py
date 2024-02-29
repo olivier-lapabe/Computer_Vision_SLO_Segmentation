@@ -25,32 +25,32 @@ img_GT_array = [
 # Segmentation Parameters
 # -----------------------------------------------------------------------------
 # First grid search:
-# contrast_factors = np.arange(1, 2, 0.1)
-# structures = [
-#     [disk(1), disk(2)],
-#     [disk(1), disk(2), disk(3)],
-#     [disk(1), disk(2), disk(3), disk(4)]
-# ]
-# gaussian_sigmas = np.arange(0.5, 1.5, 0.1)
-# thresholds = range(5, 15)
-# remove_min_sizes = range(50, 100, 5)
+contrast_factors = np.arange(1, 2, 0.1)
+p_structures = [
+    [disk(1), disk(2)],
+    [disk(1), disk(2), disk(3)],
+    [disk(1), disk(2), disk(3), disk(4)]
+]
+gaussian_sigmas = np.arange(0.5, 1.5, 0.1)
+thresholds = range(5, 15)
+remove_min_sizes = range(50, 100, 5)
 
 # Second grid search:
 # widths = [2, 3, 4]  # Example widths
 # heights = [1, 2, 3]  # Example heights
 # orientations = [0, 45, 90]  # Example orientations
-# p_structures = generate_rectangles_p_structures(widths, heights, orientations)
+# p_structures = generate_rectangles_p_structures(widths, heights, orientations, max_rectangles=3)
 # contrast_factors = [1.5]
 # gaussian_sigmas = [1]
 # thresholds = [10]
 # remove_min_sizes = [75]
 
 # Third grid search:
-contrast_factors = np.arange(1, 2, 0.1)
-p_structures = [[create_rectangle(3, 3, 0), create_rectangle(3, 3, 45), create_rectangle(3, 3, 90)]]
-gaussian_sigmas = np.arange(0.5, 1.5, 0.1)
-thresholds = range(5, 15)
-remove_min_sizes = range(50, 100, 5)
+# contrast_factors = np.arange(1, 2, 0.1)
+# p_structures = [[create_rectangle(3, 3, 0), create_rectangle(3, 3, 45), create_rectangle(3, 3, 90)]]
+# gaussian_sigmas = np.arange(0.5, 1.5, 0.1)
+# thresholds = range(5, 15)
+# remove_min_sizes = range(50, 100, 5)
 
 # Create all possible parameter combinations
 parameter_combinations = itertools.product(contrast_factors,
