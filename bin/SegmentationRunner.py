@@ -5,8 +5,6 @@ from skimage.filters import gaussian
 import time
 from scipy.ndimage import rotate
 
-
-
 # -----------------------------------------------------------------------------
 # Image Config
 # -----------------------------------------------------------------------------
